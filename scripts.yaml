@@ -1,0 +1,81 @@
+# scripts.yaml
+
+# Text to speech on all Sonos devices.
+# Requires
+#   'message' for the TTS message
+# Optional
+#   'delay' pause before resuming playback (default 1 second)
+#   'volume' to set the announcement volume (defaults to 0.5)
+  sonos_say_all:
+    alias: "Sonos Text to Speech (All)"
+    sequence:
+      - service: media_player.sonos_snapshot
+        data_template:
+          entity_id: "{{ 'media_player.kitchen' }}"
+      - service: media_player.sonos_snapshot
+        data_template:
+          entity_id: "{{ 'media_player.lounge' }}"
+      - service: media_player.sonos_unjoin
+        data_template:
+          entity_id: "{{ 'media_player.kitchen' }}"
+      - service: media_player.sonos_unjoin
+        data_template:
+          entity_id: "{{ 'media_player.lounge' }}"
+      - service: media_player.volume_set
+        data_template:
+          entity_id: "{{ 'media_player.kitchen' }}"
+          volume_level: "{{ volume|default(0.5) }}"
+      - service: media_player.volume_set
+        data_template:
+          entity_id: "{{ 'media_player.lounge' }}"
+          volume_level: "{{ volume|default(0.5) }}"
+      - service: tts.google_say
+        data_template:
+          entity_id: "{{ 'media_player.kitchen' }}"
+          message: "{{ message }}"
+      - service: tts.google_say
+        data_template:
+          entity_id: "{{ 'media_player.lounge' }}"
+          message: "{{ message }}"
+      - delay: "{{ delay|default('00:00:01') }}"
+      - wait_template: "{{ is_state('media_player.kitchen', 'playing') }}"
+        timeout: '00:00:05'
+      - wait_template: "{{ is_state('media_player.lounge', 'playing') }}"
+        timeout: '00:00:05'
+      - service: media_player.sonos_restore
+        data_template:
+          entity_id: "{{ 'media_player.kitchen' }}"
+      - service: media_player.sonos_restore
+        data_template:
+          entity_id: "{{ 'media_player.lounge' }}"
+
+# Text to speech on a specified Sonos device.
+# Requires
+#   'sonos_entity' for the device
+#   'message' for the TTS message
+# Optional
+#   'delay' pause before resuming playback (default 1 second)
+#   'volume' to set the announcement volume (defaults to 0.5)
+  sonos_say:
+    alias: "Sonos Text to Speech (Single)"
+    sequence:
+      - service: media_player.sonos_snapshot
+        data_template:
+          entity_id: "{{ sonos_entity|default('media_player') }}"
+      - service: media_player.sonos_unjoin
+        data_template:
+          entity_id: "{{ sonos_entity|default('media_player') }}"
+      - service: media_player.volume_set
+        data_template:
+          entity_id: "{{ sonos_entity|default('media_player') }}"
+          volume_level: "{{ volume|default(0.5) }}"
+      - service: tts.google_say
+        data_template:
+          entity_id: "{{ sonos_entity|default('media_player') }}"
+          message: "{{ message }}"
+      - delay: "{{ delay|default('00:00:01') }}"
+      - wait_template: "{{ is_state(sonos_entity|default('media_player'), 'playing') }}"
+        timeout: '00:00:05'
+      - service: media_player.sonos_restore
+        data_template:
+          entity_id: "{{ sonos_entity|default('media_player') }}"

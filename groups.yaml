@@ -1,7 +1,38 @@
-hiveheating:
-  entities:
-  - climate.hive_heating
-  - sensor.hive_heating_state
-  - sensor.hive_thermostat_battery_level
+# groups.yaml
+# Contains groups and views for ease of use and layout
+
+######## GROUPS ########
+HiveHeating:
+  view: no
   name: Hive Heating
-  view: false
+  entities:
+    - climate.hive_heating
+    - sensor.hive_heating_state
+    - sensor.hive_thermostat_battery_level
+
+iOS:
+  view: no
+  name: iOS
+  entities:
+    - IOSSensor.state
+    - IOSSensor.level
+
+FrontDoor:
+  view: no
+  name: Front Door
+  entities:
+    - binary_sensor.ring_front_door_ding
+    - binary_sensor.ring_front_door_motion
+
+#LivingRoom:
+#  view: no
+#  name: Living Room
+#  entities:
+#    -
+
+######## VIEWS ########
+default_view:
+  name: Home
+  entities:
+    - HiveHeating
+    - FrontDoor

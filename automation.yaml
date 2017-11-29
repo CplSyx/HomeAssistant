@@ -1,0 +1,19 @@
+# automation.yaml
+
+# Ring Doorbell to Sonos TTS
+- alias: "Doorbell Announcement"
+  trigger:
+    - platform: state
+      entity_id: binary_sensor.ring_front_door_ding
+      from: 'off'
+      to: 'on'
+  action:
+    - service: script.sonos_say
+      data:
+        sonos_entity: 'media_player.kitchen'
+        message: 'Someone is at the door.'
+        volume: 0.5
+        delay: '00:00:01'
+    - service: notify.notify
+      data:
+        message: 'Doorbell Pressed at {{now.now().strftime("%Y%m%d-%H%M%S")}}'
