@@ -1,0 +1,7 @@
+hiveheating:
+  entities:
+  - climate.hive_heating
+  - sensor.hive_heating_state
+  - sensor.hive_thermostat_battery_level
+  name: Hive Heating
+  view: false
