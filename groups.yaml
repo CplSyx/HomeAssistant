@@ -34,5 +34,5 @@ FrontDoor:
 default_view:
   name: Home
   entities:
-    - HiveHeating
-    - FrontDoor
+    - group.HiveHeating
+    - group.FrontDoor
